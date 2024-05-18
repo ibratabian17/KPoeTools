@@ -27,7 +27,7 @@ def parse_ttml(file_path, offset=0):
                         text += spans[i].tail
                 
                     lyrics.append({
-                        "time": span_begin - offset,
+                        "time": span_begin + offset,
                         "duration": span_duration,
                         "text": text,
                         "isLineEnding": 1 if i == len(spans) - 1 else 0
@@ -51,7 +51,7 @@ def time_to_ms(time_str):
 
 # Example usage:
 if len(sys.argv) < 2:
-    print("Usage: python script_name.py your_json_file.json")
+    print("Usage: python script_name.py your_json_file.json offset")
     sys.exit(1)
 
 # Get the JSON file name from the command-line argument
