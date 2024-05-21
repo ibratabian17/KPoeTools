@@ -12,6 +12,7 @@ def main_menu():
     print("1) Extract TTML from Apple Music Syllable Response")
     print("2) Convert ELRC to JSON FORMAT")
     print("3) Convert TTML to JSON FORMAT")
+    print("4) Fix Backing Vocal Lyrics Issue on older KPoe")
     print("")
     print("16) Exit bestie")
     print("============================")
@@ -33,6 +34,11 @@ def main_menu():
         file_path = filedialog.askopenfilename()
         offset = input('Do you want to use offset? ignore if no. (miliseconds): ')
         run_script(f"src/TTMLtoJSON.py \"{file_path}\" {offset}")
+    elif option == '4':
+        root = tk.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename()
+        run_script(f"src/Compability.py \"{file_path}\"")
     elif option == '16':
         sys.exit(0)
     else:
