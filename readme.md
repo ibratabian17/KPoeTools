@@ -21,7 +21,7 @@ Each tool can be used by running the corresponding file name.
 2. Navigate to the KPoeTools project directory.
 3. Run the following command:
 ```bash
-python src/KpoeTools.py
+python src/KpoeTools.py input_file.json
 ```
 
 
@@ -32,7 +32,7 @@ python src/KpoeTools.py
 3. Run the following command:
 
 ```bash
-python src/TTMLtoJSON.py
+python src/TTMLtoJSON.py input_file.ttml 0 #offset in ms
 ```
 
 ### Example Usage of ELRCtoJSON:
@@ -42,7 +42,7 @@ python src/TTMLtoJSON.py
 3. Run the following command:
 
 ```bash
-python src/ELRCtoJSON.py
+python src/ELRCtoJSON.py input_file.ttml
 ```
 
 ## Contribution
