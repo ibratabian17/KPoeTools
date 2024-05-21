@@ -26,9 +26,9 @@ os.makedirs(output_dir, exist_ok=True)
 # Iterate through each array in the data field
 for offset, item in enumerate(data['data']):
     # Generate the output file path
-    output_file = os.path.join(output_dir, f'lyrics-data{offset}.ttml')
+    output_file = os.path.join(output_dir, f'{os.path.basename(json_name)}-{offset}.ttml')
 
     # Get the ttml attribute and write it to the output file
     with open(output_file, 'w', encoding="utf-8") as outfile:
         outfile.write(item['attributes']['ttml'])
-        print(f"TTML Extracted. Saved to lyrics-data{offset}.ttml")
+        print(f"TTML Extracted. Saved to {output_file}.ttml")
