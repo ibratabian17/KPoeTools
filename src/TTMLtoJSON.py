@@ -57,7 +57,7 @@ def parse_ttml(file_path, offset=0):
                         })
                         text = ""
                     else:
-                        print(f'[WARNING] Skipping Offset {i} after {lyrics[-1]['text']}')
+                        print(f'[WARNING] Skipping Offset {i} after {lyrics[-1]["text"]}')
     return lyrics
 
 def time_to_ms(time_str):
