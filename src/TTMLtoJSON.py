@@ -3,51 +3,85 @@
 # Credit Me if u going to use this tools on non-KPoe Games
 
 import xml.etree.ElementTree as ET
-import json, sys, os
+import json
+import sys
+import os
 
 def parse_ttml(file_path, offset=0):
     tree = ET.parse(file_path)
     root = tree.getroot()
-    namespace = {'tt': 'http://www.w3.org/ns/ttml', 'itunes': 'http://music.apple.com/lyric-ttml-internal', 'ttm': 'http://www.w3.org/ns/ttml#metadata'}
+    namespace = {
+        'tt': 'http://www.w3.org/ns/ttml',
+        'itunes': 'http://music.apple.com/lyric-ttml-internal',
+        'ttm': 'http://www.w3.org/ns/ttml#metadata'
+    }
+    timing_mode = root.attrib.get('{http://music.apple.com/lyric-ttml-internal}timing', 'Word')
+    if timing_mode == "Line":
+        print('[WARNING] This TTML are not Synced Word-by-Word')
+    
     lyrics = []
     
     for div in root.findall('.//tt:div', namespace):
         for p in div.findall('.//tt:p', namespace):
-            spans = p.findall('.//tt:span', namespace)
-            text = ""
-            for i, span in enumerate(spans):
-                if isinstance(span.text, str):
-                    span_text = span.text
-                    span_begin = time_to_ms(span.attrib['begin'])
-                    span_end = time_to_ms(span.attrib['end'])
-                    span_duration = span_end - span_begin
+            if timing_mode == "Line":
+                p_text = p.text or ""
+                p_begin = time_to_ms(p.attrib['begin'])
+                p_end = time_to_ms(p.attrib['end'])
+                p_duration = p_end - p_begin
                 
-                    text += span_text
-                    if isinstance(spans[i].tail, str):
-                        text += spans[i].tail
-                
-                    lyrics.append({
-                        "time": span_begin + offset,
-                        "duration": span_duration,
-                        "text": text,
-                        "isLineEnding": 1 if i == len(spans) - 1 else 0
-                     })
-                    text = ""
-                else:
-                    print(f'Skipping Offset {i}')
+                lyrics.append({
+                    "time": p_begin + offset,
+                    "duration": p_duration,
+                    "text": p_text,
+                    "isLineEnding": 1
+                })
+            else:
+                spans = p.findall('.//tt:span', namespace)
+                text = ""
+                for i, span in enumerate(spans):
+                    if isinstance(span.text, str):
+                        span_text = span.text
+                        span_begin = time_to_ms(span.attrib['begin'])
+                        span_end = time_to_ms(span.attrib['end'])
+                        span_duration = span_end - span_begin
+                    
+                        text += span_text
+                        if isinstance(spans[i].tail, str):
+                            text += spans[i].tail
+                    
+                        lyrics.append({
+                            "time": span_begin + offset,
+                            "duration": span_duration,
+                            "text": text,
+                            "isLineEnding": 1 if i == len(spans) - 1 else 0
+                        })
+                        text = ""
+                    else:
+                        print(f'[WARNING] Skipping Offset {i} after {lyrics[-1]['text']}')
     return lyrics
 
 def time_to_ms(time_str):
-    if ':' in time_str:
-        minutes, seconds = time_str.split(':')
+    parts = time_str.split(':')
+    
+    if len(parts) == 3:  # Format: "HH:MM:SS.sss"
+        hours, minutes, seconds = parts
+        hours = int(hours)
         minutes = int(minutes)
-        seconds, milliseconds = map(int, seconds.split('.'))
-        total_ms = minutes * 60 * 1000 + seconds * 1000 + milliseconds
-        return total_ms
+    elif len(parts) == 2:  # Format: "MM:SS.sss"
+        hours = 0
+        minutes, seconds = parts
+        minutes = int(minutes)
+    elif len(parts) == 1 and '.' in parts[0]:  # Format: "SS.sss"
+        hours = 0
+        minutes = 0
+        seconds = parts[0]
     else:
-        seconds, milliseconds = map(int, time_str.split('.'))
-        total_ms = seconds * 1000 + milliseconds
-        return total_ms
+        raise ValueError(f"Unexpected time format: {time_str}")
+
+    seconds, milliseconds = map(int, seconds.split('.'))
+    total_ms = hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000 + milliseconds
+    return total_ms
+
 
 # Example usage:
 if len(sys.argv) < 2:
