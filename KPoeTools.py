@@ -13,6 +13,7 @@ def main_menu():
     print("2) Convert ELRC to JSON FORMAT")
     print("3) Convert TTML to JSON FORMAT")
     print("4) Fix Backing Vocal Lyrics Issue on older KPoe")
+    print("5) Romanize Lyrics For Non-English Songs")
     print("")
     print("16) Exit bestie")
     print("============================")
@@ -39,6 +40,12 @@ def main_menu():
         root.withdraw()
         file_path = filedialog.askopenfilename()
         run_script(f"src/Compability.py \"{file_path}\"")
+    elif option == '5':
+        root = tk.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename()
+        lang = input('Which language do you want to romanize? (kr/zh/jp): ')
+        run_script(f"src/Romanizer.py \"{file_path}\" {lang}")
     elif option == '16':
         sys.exit(0)
     else:
