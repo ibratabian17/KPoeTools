@@ -44,7 +44,8 @@ def main_menu():
         root = tk.Tk()
         root.withdraw()
         file_path = filedialog.askopenfilename()
-        lang = input('Which language do you want to romanize? (kr/zh/jp): ')
+        print('Available Languages:\n* kr = Korean   * zh = Chinese   * jp = Japan\n* ar = Arabic   * heb = Hebrew   * sy = Syiria   * gr = Greek')
+        lang = input('Which language do you want to romanize? (regioncode): ')
         run_script(f"src/Romanizer.py \"{file_path}\" {lang}")
     elif option == '16':
         sys.exit(0)

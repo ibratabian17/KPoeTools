@@ -10,6 +10,8 @@ KPoeTools is a collection of tools for managing and converting lyric formats int
 | SyllableExtractor      | Extracts text from Apple Music response in TTML format.                                      | Open `src/SyllableExtractor.py response.json` or `src/KpoeTools.py`                                              |
 | TTMLtoJSON             | Converts lyrics in TTML format to JSON format according to the KPOE standard.                | Open `src/TTMLtoJSON.py input_file.ttml offset_in_ms` or `src/KpoeTools.py`                                                     |
 | ELRCtoJSON             | Converts lyrics in ELRC format to JSON format according to the KPOE standard.                | Open `src/ELRCtoJSON.py input_file.lrc` or `src/KpoeTools.py`                                                     |
+| Romanize               | Romanize lyrics to Latin style                                                               | Open `src/Romanizer.py input_file.lrc` or `src/KpoeTools.py`                                                        | 
+| Compability            | Fix lyrics parsing issue on Old Version of KPoe                                              | Open `src/Romanizer.py input_file.lrc` or `src/KpoeTools.py`                                                        | 
 
 ## Usage
 
@@ -43,6 +45,26 @@ python src/TTMLtoJSON.py input_file.ttml 0 #offset in ms
 
 ```bash
 python src/ELRCtoJSON.py input_file.ttml
+```
+
+### Example Usage of Romanize:
+
+1. Open a terminal.
+2. Navigate to the KPoeTools project directory.
+3. Run the following command:
+
+```bash
+python src/Romanizer.py input_lyrics.json [<Lang>]
+```
+
+### Example Usage of Compability:
+
+1. Open a terminal.
+2. Navigate to the KPoeTools project directory.
+3. Run the following command:
+
+```bash
+python src/Compability.py input_lyrics.json
 ```
 
 ## Contribution

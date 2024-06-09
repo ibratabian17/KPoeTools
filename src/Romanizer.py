@@ -20,9 +20,10 @@ def romanize_text(text, lang):
         kakasi = pykakasi.kakasi()
         result = kakasi.convert(text)
         return " ".join([item['hepburn'] for item in result])
-    elif lang == "ar":
-        # Add your Arabic romanization logic here
-        pass
+    elif lang == "ar" or lang == "heb" or lang == "sy" or lang == "gr":
+        import romanize3
+        r = romanize3.__dict__['syc']
+        return r.convert(text)
     else:
         raise ValueError("Unsupported language")
 
