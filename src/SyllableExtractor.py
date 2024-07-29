@@ -26,7 +26,7 @@ for offset, item in enumerate(data['data']):
     os.makedirs(output_dir, exist_ok=True)
 
     # Generate the output file path 
-    output_file = os.path.join(output_dir, f'{item['id']}-{offset}.ttml')
+    output_file = os.path.join(output_dir, f'{item["id"]}-{offset}.ttml')
 
     # Get the ttml attribute and write it to the output file
     with open(output_file, 'w', encoding="utf-8") as outfile:
