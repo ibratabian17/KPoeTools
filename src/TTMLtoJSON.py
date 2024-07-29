@@ -3,7 +3,7 @@ import json
 import sys
 import os
 
-def parse_ttml(file_path, offset=0):
+def parse_ttml(file_path, offset=0, separate=False):
     tree = ET.parse(file_path)
     root = tree.getroot()
     namespace = {
@@ -50,7 +50,7 @@ def parse_ttml(file_path, offset=0):
                         span_duration = span_end - span_begin
 
                         text += span_text
-                        if isinstance(spans[i].tail, str):
+                        if isinstance(spans[i].tail, str) and separate == False:
                             text += spans[i].tail
 
                         lyrics.append({
@@ -64,6 +64,16 @@ def parse_ttml(file_path, offset=0):
                                 "singer": singer
                             }
                         })
+                        if isinstance(spans[i].tail, str) and separate == True:
+                            lyrics.append({
+                                "time": span_begin + span_duration + offset,
+                                "duration": 0,
+                                "text": spans[i].tail,
+                                "isLineEnding": 0,
+                                "element": {
+                                }
+                            })
+
                         text = ""
                     else:
                         print(f'[WARNING] Skipping Offset {i} after {lyrics[-1]["text"]}')
@@ -93,17 +103,27 @@ def time_to_ms(time_str):
 
 # Example usage:
 if len(sys.argv) < 2:
-    print("Usage: python script_name.py your_json_file.json offset")
+    print("Usage: python script_name.py your_json_file.json offset seperate_space:no")
     sys.exit(1)
 
 # Get the JSON file name from the command-line argument
 file_path = sys.argv[1]
 output_file_path = 'output/lyrics.json'
 offset = 0
+separate = False
 if len(sys.argv) >= 3:
     offset = int(sys.argv[2])
     print(f'Starting Lyrics At {offset}ms')
-lyrics_json = parse_ttml(file_path, offset)
+
+if len(sys.argv) >= 4:
+    if 'yes' in sys.argv[3] or 'y' == sys.argv[3]:
+        print(f'Spaces will be separated from words')
+        separate = True
+    elif 'no' in sys.argv[3] or 'n' == sys.argv[3]:
+        pass
+    else:
+        raise ValueError('Invalid Option! (\'yes\' or \'no\')')
+lyrics_json = parse_ttml(file_path, offset, separate)
 
 # Write the output to a JSON file
 input_file = sys.argv[1]

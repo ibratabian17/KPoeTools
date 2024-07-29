@@ -1,5 +1,5 @@
 import os, sys, json
-import shutil
+import shutil, pathlib
 import tkinter as tk
 from tkinter import filedialog
 anu = True
@@ -21,31 +21,37 @@ def main_menu():
 
     if option == '1':
         root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Select the Response", filetypes=[("Response JSON", ".json")])
+        root.destroy()
         run_script(f"src/SyllableExtractor.py \"{file_path}\"")
     elif option == '2':
         root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Choose the LyricsFiles", filetypes=[("Lyrics Files/Enhanced Lyrics Files", ".lrc/.elrc")])
+        root.destroy()
         run_script(f"src/ELRCtoJSON.py \"{file_path}\" {offset}")
     elif option == '3':
         root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Choose the TTML", filetypes=[("Timed Text Markup Language", ".ttml")])
         offset = input('Do you want to use offset? ignore if no. (miliseconds): ')
-        run_script(f"src/TTMLtoJSON.py \"{file_path}\" {offset}")
+        separate = input('Do you want to put space as different word? (yes/no): ')
+        root.destroy()
+        run_script(f"src/TTMLtoJSON.py \"{file_path}\" {offset} {separate}")
     elif option == '4':
         root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Select the Lyrics", filetypes=[("Lyrics JSON", ".json")])
+        root.destroy()
         run_script(f"src/Compability.py \"{file_path}\"")
     elif option == '5':
         root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Select the Lyrics", filetypes=[("Lyrics JSON", ".json")])
         print('Available Languages:\n* kr = Korean   * zh = Chinese   * jp = Japan\n* ar = Arabic   * heb = Hebrew   * sy = Syiria   * gr = Greek')
         lang = input('Which language do you want to romanize? (regioncode): ')
+        root.destroy()
         run_script(f"src/Romanizer.py \"{file_path}\" {lang}")
     elif option == '16':
         sys.exit(0)
