@@ -14,6 +14,8 @@ def main_menu():
     print("3) Convert TTML to JSON FORMAT")
     print("4) Fix Backing Vocal Lyrics Issue on older KPoe")
     print("5) Romanize Lyrics For Non-English Songs")
+    print("6) Generate Pitch TMLs for Scoring (WIP)")
+    print("7) Download Syllable-Timed Lyrics from Apple Music (Apple Music Subscription Required)")
     print("")
     print("16) Exit bestie")
     print("============================")
@@ -53,6 +55,28 @@ def main_menu():
         lang = input('Which language do you want to romanize? (regioncode): ')
         root.destroy()
         run_script(f"src/Romanizer.py \"{file_path}\" {lang}")
+    elif option == '6':
+        print('Put your audiofiles... (should be audio, not audio inside video)')
+        root = tk.Tk()
+        root.title('')
+        file_path = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Select the Audio Waves", filetypes=[("All Files", ".*")])
+        root.destroy()
+        lytiming = input('Do you want to use lyrics TMLs (no for automatic (BROKEN)) (recommended) (y/n):')
+        if lytiming.lower() == 'yes' or lytiming.lower() == 'y' :
+            root = tk.Tk()
+            root.title('')
+            lyrics = filedialog.askopenfilename(initialdir=str(pathlib.Path().absolute()), title="Select the Lyrics TMLs", filetypes=[("Lyrics JSON", ".json")])
+            root.destroy()
+            run_script(f"src/PitchTMLGen.py \"{file_path}\" 0 \"{lyrics}\"")
+        else:
+            minimum = float(input('Enter the minimum volume threshold (in percent, for example 30):'))
+            run_script(f"src/PitchTMLGen.py \"{file_path}\" {minimum}")
+    elif option == '7':
+        music_term = input('Put your Music Name or Music Name With Artist Name: \n')
+        music_term_escaped = music_term.replace('"', '\\"').replace("'", "\\'")
+        run_script(f"src/ApmusDownloader.py \"{music_term_escaped}\"")
+
+        
     elif option == '16':
         sys.exit(0)
     else:
